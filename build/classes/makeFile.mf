@@ -1,0 +1,30 @@
+JFLAGS = -g
+JC = javac
+JVM= java 
+.SUFFIXES: .java .class
+.java.class:
+	$(JC) $(JFLAGS) $*.java
+
+CLASSES = \
+	Backend\Arbol.java\
+	Backend\Dato.java\
+	Backend\LectorArchivo.java\
+	Backend\Nodo.java\
+	Backend\Recorrido.java\
+
+	Backend\Grafos\Arista.java\
+	Backend\Grafos\Grafo.java\
+	Backend\Grafos\Vertice.java\
+
+	UI\ElegirMedio.java\
+	UI\Principal.java\
+	UI\Ventana1.java\
+
+	waze\guatemala/WazeGuatemala.java
+
+default: classes
+
+classes: $(CLASSES:.java=.class)
+
+clean:
+	$(RM) *.class

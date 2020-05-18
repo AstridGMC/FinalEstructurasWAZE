@@ -1,0 +1,526 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Backend.Grafos;
+
+import Backend.Dato;
+import java.util.ArrayList;
+import Backend.Grafos.Vertice;
+import Backend.Recorrido;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+
+/**
+ *
+ * @author astridmc
+ */
+public class Grafos {
+
+    ArrayList<ArrayList<Vertice>> caminosRecorridos;
+    boolean[][] matrizAdyacencia;
+    ArrayList<Vertice> vertices = new ArrayList();
+    Dato inicio;
+    Dato fin;
+    int distancia;
+
+    public ArrayList<ArrayList<Vertice>> getCaminosRecorridos() {
+        return caminosRecorridos;
+    }
+
+    public void setCaminosRecorridos() {
+        caminosRecorridos = new ArrayList();
+    }
+
+    public boolean[][] getMatrizAdyacencia() {
+        return matrizAdyacencia;
+    }
+
+    public void setMatrizAdyacencia(boolean[][] matrizAdyacencia) {
+        this.matrizAdyacencia = matrizAdyacencia;
+    }
+
+    public ArrayList<Vertice> getVertices() {
+        return vertices;
+    }
+
+    public void setVertices(ArrayList<Vertice> vertices) {
+        this.vertices = vertices;
+    }
+
+    public void CrearMatrizAdyacencia() {
+        matrizAdyacencia = new boolean[vertices.size()][vertices.size()];
+
+        for (int i = 0; i < vertices.size(); i++) {
+            int indice = -1;
+            System.out.println(vertices.get(i).getAdyacentes().size() + "numAdyacentes.................");
+            for (int j = 0; j < vertices.size(); j++) {
+                for (int l = 0; l < vertices.get(i).getAdyacentes().size(); l++) {
+                   // System.out.println("\n\n probando" + vertices.get(i).getAdyacentes().get(l).getVer2().getNombre() + " adyacente de " + vertices.get(i).getNombre());
+                    if (vertices.get(i).getAdyacentes() != null) {
+                        if (vertices.get(i).getAdyacentes().get(l).getVer2() == vertices.get(j)) {
+                            System.out.println(vertices.get(i).getAdyacentes().get(l).getVer2().getNombre() + " y " + vertices.get(j).getNombre());
+                            System.out.println("entrando Matriz............" + "\n");
+                            String nodo = vertices.get(i).getAdyacentes().get(l).getVer2().getNombre();
+                            //indice = CalcularIndice(vertices, nodo);
+                            // System.out.println(indice);
+                            matrizAdyacencia[i][j] = true;
+                            break;
+                        } else {
+                            System.out.println(vertices.get(i).getAdyacentes().get(l).getVer2().getNombre() + "  no es igual a " + vertices.get(j).getNombre());
+                            indice = -1;
+                            if (matrizAdyacencia[i][j] != true) {
+
+                                matrizAdyacencia[i][j] = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < matrizAdyacencia.length; i++) {
+            for (int j = 0; j < matrizAdyacencia.length; j++) {
+                System.out.print(matrizAdyacencia[i][j]);
+            }
+            System.out.println("\n");
+        }
+    }
+
+    public void CrearRecorridos(Vertice uno, Vertice fin) {
+        caminosRecorridos = new ArrayList();
+        int intVer = ObtenerIndiceVertice(uno.getNombre());
+        int intfin = ObtenerIndiceVertice(fin.getNombre());
+        ArrayList<Vertice> vertices = new ArrayList();
+        CaminosR(vertices, intVer, intfin);
+    }
+
+    /*
+    public void CalcularCaminos(boolean matriz[][]){
+        Arista  arista = new Arista();
+        float matrizDistancias[][]=null;
+        int verticesN = matriz.length;
+        boolean matriz1[][] = matriz;
+        //Vertice caminos[][] = new Vertice [vertices.size()][vertices.size()];
+        ArrayList<Vertice> caminos = new ArrayList();
+        String caminosAux[][] = new  String [verticesN][verticesN];
+        String recorrido;
+        String cadena;
+        Vertice caminitos;
+        double distancia1=0;
+        double distancia2=0;
+        double distancia3=0;
+        double minimo;
+        boolean aux1, aux2, aux3, min;
+        int i=0;
+        int j=0;
+        int k=0;
+        
+        for (i = 0; i < verticesN; i++) {
+            for ( j = 0; j < verticesN; j++) {
+                caminos = null;
+                caminosAux[i][j]=null;
+                           
+            }
+        }
+        for (k = 0; k < verticesN; k++) {
+            for ( i = 0; i < verticesN; i++) {
+                for (j = 0; j < verticesN; j++) {
+                    aux1 = matriz1[i][j];
+                    aux2 = matriz[i][k];
+                    aux3 = matriz[k][j];
+                    if(aux1){
+                        distancia1 = arista.DistanciaEntreMatrices(vertices.get(i), vertices.get(j));
+                    } 
+                    if(aux2){
+                        distancia2 = arista.DistanciaEntreMatrices(vertices.get(i), vertices.get(k));
+                    }
+                    distancia3 = distancia1 + distancia2;
+                    minimo = Math.min(distancia1, distancia3);
+                    if(distancia1!= minimo){
+                        if(minimo == distancia3){
+                            caminosAux[i][j] = k + "";
+                            caminos= caminoR(i,k, caminos);
+                        }
+                    }
+                    matrizDistancias[i][j]= (float) minimo;
+                    
+                }
+            }
+ 
+        }
+        
+         for (i = 0; i < verticesN; i++) {
+            for ( j = 0; j < verticesN; j++) {
+                cadena = cadena + "[";
+            }
+        }
+        
+    }*/
+    public boolean contiene(ArrayList<Vertice> caminos2, Vertice vertice){
+        for (int i = 0; i < caminos2.size(); i++) {
+            if(caminos2.get(i)== vertice){
+                System.out.println("YAESTA");
+                return true;
+            }else{
+                return false;
+            }
+        }
+        return false;
+    }
+    
+    
+    public void CaminosR(ArrayList<Vertice> caminos2, int indiceInicio, int indiceFin) {
+        
+        if (!contiene(caminos2, vertices.get(indiceInicio))) {
+                caminos2.add(vertices.get(indiceInicio));
+            }
+        
+        
+        //System.out.println(vertices.get(indiceInicio).getNombre() + "  nombre inicio ");
+        //System.out.println(vertices.get(indiceFin).getNombre() + "   nombre fin ");
+        //for (int i = 0; i < matrizAdyacencia.length; i++) {
+        if (matrizAdyacencia[indiceInicio][indiceFin] == true) {
+            System.out.println("Hay coincidencias de " + vertices.get(indiceInicio).getNombre() + "->>> " + vertices.get(indiceFin).getNombre());
+            // caminos2 = CaminosR(caminos2, j, indiceFin);
+            if (!contiene(caminos2, vertices.get(indiceFin))) {
+                caminos2.add(vertices.get(indiceFin));
+            }
+            ArrayList<Vertice> misVertices= pasarArreglo(caminos2);
+            caminosRecorridos.add(misVertices);
+            caminos2.remove(vertices.get(indiceFin));
+            //System.out.println(caminosRecorridos.get(0).size()+" datos: "+caminosRecorridos.get(0).get(0).getNombre()+"  "+caminosRecorridos.get(0).get(1).getNombre() );
+        }
+        for (int j = 0; j < matrizAdyacencia.length; j++) {
+            if (matrizAdyacencia[indiceInicio][j] == true) {
+                System.out.println( vertices.get(indiceInicio).getNombre()+"probando  "+ vertices.get(j).getNombre()+ "tammm "+ caminos2.size());
+                ArrayList<Vertice> verticesAux = pasarArreglo(caminos2) ;
+                if (!contiene(caminos2, vertices.get(j))) {
+                    CaminosR(caminos2, j, indiceFin);
+                }
+                caminos2= pasarArreglo(verticesAux);
+                
+            }
+            
+        }
+        
+        
+        // }
+    }
+    
+    public ArrayList<Vertice> pasarArreglo(ArrayList<Vertice> viejo){
+        ArrayList<Vertice> nuevo = new ArrayList();
+        for (int i = 0; i < viejo.size(); i++) {
+            nuevo.add(viejo.get(i));
+        }
+        return nuevo;
+    }
+
+    // carro = true, pie = false;
+    public ArrayList<Recorrido> CalcularMenorRecorrido(int opcion, boolean medio) {
+        for (int i = 0; i < caminosRecorridos.size(); i++) {
+            String imprimir= "";
+            for (int j = 0; j < caminosRecorridos.get(i).size(); j++) {
+                imprimir = imprimir + caminosRecorridos.get(i).get(j).getNombre()+ "->>>";
+                System.out.println( caminosRecorridos.get(i).size());
+            }
+               
+            
+            System.out.print(imprimir);
+        }
+        System.out.println(caminosRecorridos.size() + "tam recorridos");
+        ArrayList<Recorrido> recorridosC = new ArrayList();
+        double minimo = 0;
+
+        if (medio = true) {
+            double suma = 0;
+            if (opcion == 0) {
+                for (int i = 0; i < caminosRecorridos.size(); i++) {
+                    Arista arista = new Arista(); 
+                    Recorrido recorrido = new Recorrido();
+                    recorrido.setVertices(caminosRecorridos.get(i));
+                    recorrido.setId(i + 1);
+                    recorrido.setDestino(caminosRecorridos.get(i).get(0));
+                    recorrido.setOrigen(caminosRecorridos.get(i).get(caminosRecorridos.get(i).size() - 1));
+                    for (int j = 0; j < caminosRecorridos.get(i).size()-1; j++) {
+                        Vertice vertice = caminosRecorridos.get(i).get(j);
+                        Vertice verticeSal = caminosRecorridos.get(i).get(j+1);
+                        if(arista.ObtenerIndiceArista( vertice.getAdyacentes(),vertice)>-1){
+                            suma = suma + vertice.getAdyacentes().get(arista.ObtenerIndiceArista( vertice.getAdyacentes(),verticeSal)).getDato().getDistancia();
+                            recorrido.setPeso(suma);
+                        }
+                    }
+                    recorridosC.add(recorrido);
+                }
+            } else if (opcion == 1) {
+
+                for (int i = 0; i < caminosRecorridos.size(); i++) {
+                    Recorrido recorrido = new Recorrido();
+                    recorrido.setVertices(caminosRecorridos.get(i));
+                    recorrido.setId(i + 1);
+                    recorrido.setDestino(caminosRecorridos.get(i).get(0));
+                    recorrido.setOrigen(caminosRecorridos.get(i).get(caminosRecorridos.get(i).size() - 1));
+                    for (int j = 0; j < caminosRecorridos.get(i).size() - 1; j++) {
+                        Vertice vertice = caminosRecorridos.get(i).get(j);
+                        suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getConsumoGas();
+
+                    }
+                    recorridosC.add(recorrido);
+                }
+            } else {
+                for (int i = 0; i < caminosRecorridos.size(); i++) {
+                    Recorrido recorrido = new Recorrido();
+                    recorrido.setVertices(caminosRecorridos.get(i));
+                    recorrido.setId(i + 1);
+                    recorrido.setDestino(caminosRecorridos.get(i).get(0));
+                    recorrido.setOrigen(caminosRecorridos.get(i).get(caminosRecorridos.get(i).size() - 1));
+                    for (int j = 0; j < caminosRecorridos.get(i).size() - 1; j++) {
+                        Vertice vertice = caminosRecorridos.get(i).get(j);
+                        if (caminosRecorridos.get(i).size() > 1) {
+                            suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getDistancia();
+                            suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getConsumoGas();
+                        }else{
+                            suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getDistancia();
+                            suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getConsumoGas();
+                        }
+                        recorrido.setPeso(suma / 2);
+                    }
+                    recorridosC.add(recorrido);
+                }
+            }
+        } else {
+            double suma = 0;
+            if (opcion == 0) {
+                for (int i = 0; i < caminosRecorridos.size(); i++) {
+                    Recorrido recorrido = new Recorrido();
+                    recorrido.setVertices(caminosRecorridos.get(i));
+                    recorrido.setId(i + 1);
+                    recorrido.setDestino(caminosRecorridos.get(i).get(0));
+                    recorrido.setOrigen(caminosRecorridos.get(i).get(caminosRecorridos.get(i).size() - 1));
+                    for (int j = 0; j < caminosRecorridos.get(i).size() - 1; j++) {
+                        Vertice vertice = caminosRecorridos.get(i).get(j);
+                        suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getDistancia();
+                        recorrido.setPeso(suma);
+                    }
+                    recorridosC.add(recorrido);
+                }
+            } else if (opcion == 1) {
+                for (int i = 0; i < caminosRecorridos.size(); i++) {
+                    Recorrido recorrido = new Recorrido();
+                    recorrido.setVertices(caminosRecorridos.get(i));
+                    recorrido.setId(i + 1);
+                    recorrido.setDestino(caminosRecorridos.get(i).get(0));
+                    recorrido.setOrigen(caminosRecorridos.get(i).get(caminosRecorridos.get(i).size() - 1));
+                    for (int j = 0; j < caminosRecorridos.get(i).size() - 1; j++) {
+                        Vertice vertice = caminosRecorridos.get(i).get(j);
+                        suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getDesgastePersona();
+                    }
+                    recorridosC.add(recorrido);
+                }
+            } else {
+                for (int i = 0; i < caminosRecorridos.size(); i++) {
+                    Recorrido recorrido = new Recorrido();
+                    recorrido.setVertices(caminosRecorridos.get(i));
+                    recorrido.setId(i + 1);
+                    recorrido.setDestino(caminosRecorridos.get(i).get(0));
+                    recorrido.setOrigen(caminosRecorridos.get(i).get(caminosRecorridos.get(i).size() - 1));
+                    for (int j = 0; j < caminosRecorridos.get(i).size() - 1; j++) {
+                        Vertice vertice = caminosRecorridos.get(i).get(j);
+                        suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getDesgastePersona();
+                        suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getDistancia();
+                        recorrido.setPeso(suma / 2);
+                    }
+                    recorridosC.add(recorrido);
+                }
+            }
+        }
+        return recorridosC;
+    }
+
+    private int CalcularIndice(ArrayList<Vertice> vertices, String dato) {
+        for (int i = 0; i < vertices.size(); i++) {
+            if (dato.equals(vertices.get(i).getNombre())) {
+                return i;
+            } else {
+                return -1;
+            }
+        }
+        return -1;
+    }
+
+    public void InsertarVertices(ArrayList<Dato> datos) {
+        for (int i = 0; i < datos.size(); i++) {
+            if (!ExisteVertice(datos.get(i).getOrigen())) {
+                System.out.println("insertando Vertice " + datos.get(i).getOrigen() + i);
+                Vertice vertice = new Vertice();
+                vertice.setId(i);
+                vertice.setNombre(datos.get(i).getOrigen());
+                vertices.add(vertice);
+            }
+        }
+        for (int i = 0; i < datos.size(); i++) {
+            if (!ExisteVertice(datos.get(i).getDestino())) {
+                System.out.println("insertando Vertice " + datos.get(i).getDestino() + i + "hhh");
+                Vertice vertice = new Vertice();
+                vertice.setId(i);
+                vertice.setNombre(datos.get(i).getDestino());
+                vertices.add(vertice);
+            }
+        }
+
+        for (int i = 0; i < vertices.size(); i++) {
+            System.out.println(vertices.get(i).getNombre());
+        }
+
+        InsertarAristas(datos);
+
+        CrearMatrizAdyacencia();
+
+        CrearImagenGrafoDirigido();
+    }
+
+    public boolean InsertarAristas(ArrayList<Dato> datos) {
+        boolean insertado = false;
+        System.out.println("\n");
+        for (int i = 0; i < datos.size(); i++) {
+            int indiceOrigen = ObtenerIndiceVertice(datos.get(i).getOrigen());
+            int indiceDestino = ObtenerIndiceVertice(datos.get(i).getDestino());
+            System.out.println(indiceOrigen + " " + datos.get(i).getOrigen() + "           " + indiceDestino + "    " + datos.get(i).getDestino());
+            if (indiceOrigen > -1 && indiceDestino > -1) {
+                System.out.println("insertando arista entre " + datos.get(i).getOrigen() + "     " + datos.get(i).getDestino());
+                if (insertaArista(vertices.get(indiceOrigen), vertices.get(indiceDestino), datos.get(i))) {
+                    insertado = true;
+                } else {
+                    insertado = false;
+                }
+            } else {
+            }
+        }
+        return insertado;
+    }
+
+    public boolean insertaArista(Vertice v1, Vertice v2, Dato dato) {
+
+        if (!ExisteArista(v1, v2)) {
+            Arista arista = new Arista(v1, v2);
+            v1.InsertarCamino(arista);
+            arista.setDato(dato);
+            return true;
+        } else {
+            System.out.println("Ya existe una arista entre:" + v1 + " y " + v2);
+            return false;
+        }
+    }
+
+    public boolean ExisteArista(Vertice v1, Vertice v2) {
+        if (v1.getAdyacentes() != null) {
+            for (int i = 0; i < v1.getAdyacentes().size(); i++) {
+                if (v1.getAdyacentes().get(i).getVer2() == v2) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean ExisteVertice(String nombre) {
+        for (int i = 0; i < vertices.size(); i++) {
+            if (vertices.get(i).nombre.contains(nombre)) {
+                return true;
+            } else {
+            }
+        }
+        return false;
+    }
+
+    public int ObtenerIndiceVertice(String nombre) {
+        int oo = -1;
+        System.out.println("\n  " + vertices.size());
+        for (int i = 0; i < vertices.size(); i++) {
+            if (nombre.contains(vertices.get(i).getNombre())) {
+
+                oo = i;
+                break;
+            } else {
+                oo = -1;
+            }
+        }
+        return oo;
+    }
+
+    public void CrearImagenGrafoDirigido() {
+        String flecha = " ->  ";
+        String archivoDot = " digraph G \n  {  "
+                + "node [shape=circle];\n"
+                + " node [style=filled];\n"
+                + " node [fillcolor=\"#EEEEEE\"];\n"
+                + " node [color=\"#EEEEEE\"];\n"
+                + " edge [color=\"#31CEF0\"];";
+        String fin = "rankdir=LR;\n" + "}";
+        String verticesS = "\n";
+        System.out.println(vertices.size());
+        for (int i = 0; i < vertices.size(); i++) {
+            Vertice verticeA = vertices.get(i);
+            for (int j = 0; j < verticeA.getAdyacentes().size(); j++) {
+                if (verticeA.getAdyacentes() != null) {
+                    Arista arista = verticeA.getAdyacentes().get(j);
+                    verticesS = verticesS + arista.getVer1().getNombre() + flecha + arista.getVer2().getNombre() + " ;\n";
+                }
+
+            }
+        }
+
+        creador(archivoDot + verticesS + fin);
+
+    }
+    public String direccionPng;
+
+    public boolean creador(String texto) {
+        try {
+            File miDir = new File(".");
+            String ruta = miDir.getCanonicalPath() + "/dibujo.dot";
+            System.out.println(miDir.getCanonicalPath());
+            String contenido = texto;
+            File file = new File(ruta);
+            // Si el archivo no existe es creado
+            if (!file.exists()) {
+                file.createNewFile();
+            } else {
+
+            }
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write("");
+            bw.write(contenido);
+            bw.close();
+
+            direccionPng = miDir.getCanonicalPath() + "/grafo.png";
+            dibujar(ruta, direccionPng);
+            System.out.println("se ha dibujado la Ruta");
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    public static void dibujar(String direccionDot, String direccionPng) {
+        try {
+            ProcessBuilder pbuilder;
+
+            pbuilder = new ProcessBuilder("dot", "-Tpng", "-o", direccionPng, direccionDot);
+            pbuilder.redirectErrorStream(true);
+            //Ejecuta el proceso
+            pbuilder.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}
