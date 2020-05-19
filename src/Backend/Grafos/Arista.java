@@ -87,8 +87,11 @@ public class Arista {
 
 	Arista arista2 = (Arista) ar;
 
-	if(arista2.ver1.equals(this.ver1) && arista2.ver2.equals(this.ver2))
-	    return true;
+	if(arista2.getVer2().equals(this.ver2)) {
+            if (arista2.getVer1().equals(this.ver1)) {
+                return true;
+            }
+        }
 
 	return false;
     }
@@ -106,14 +109,13 @@ public class Arista {
         return -1;
      }
      
-     public int ObtenerIndiceArista(ArrayList<Arista> aristas, Vertice salida){
+     public int ObtenerIndiceArista(ArrayList<Arista> aristas, Vertice vt){
          for (int i = 0; i < aristas.size(); i++) {
-            if(aristas.get(i).getVer2()==salida){
-                System.out.println("la salida encontrada es "+ salida.getNombre());
+            if(aristas.get(i).getVer2()==vt){
+                System.out.println("la salida encontrada es "+ vt.getNombre());
                  return i;
             }else{
-                System.out.println("la salida NOOOOO encontrada es "+ salida.getNombre());
-                return -1;
+                System.out.println(aristas.get(i).getVer2().getNombre()+"......la salida NOOOOO encontrada es "+ vt.getNombre()+ aristas.size());
             }
          }
          return -1;

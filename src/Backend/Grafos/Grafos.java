@@ -161,7 +161,6 @@ public class Grafos {
     public boolean contiene(ArrayList<Vertice> caminos2, Vertice vertice){
         for (int i = 0; i < caminos2.size(); i++) {
             if(caminos2.get(i)== vertice){
-                System.out.println("YAESTA");
                 return true;
             }else{
                 return false;
@@ -182,7 +181,7 @@ public class Grafos {
         //System.out.println(vertices.get(indiceFin).getNombre() + "   nombre fin ");
         //for (int i = 0; i < matrizAdyacencia.length; i++) {
         if (matrizAdyacencia[indiceInicio][indiceFin] == true) {
-            System.out.println("Hay coincidencias de " + vertices.get(indiceInicio).getNombre() + "->>> " + vertices.get(indiceFin).getNombre());
+            //System.out.println("Hay coincidencias de " + vertices.get(indiceInicio).getNombre() + "->>> " + vertices.get(indiceFin).getNombre());
             // caminos2 = CaminosR(caminos2, j, indiceFin);
             if (!contiene(caminos2, vertices.get(indiceFin))) {
                 caminos2.add(vertices.get(indiceFin));
@@ -194,7 +193,7 @@ public class Grafos {
         }
         for (int j = 0; j < matrizAdyacencia.length; j++) {
             if (matrizAdyacencia[indiceInicio][j] == true) {
-                System.out.println( vertices.get(indiceInicio).getNombre()+"probando  "+ vertices.get(j).getNombre()+ "tammm "+ caminos2.size());
+                //System.out.println( vertices.get(indiceInicio).getNombre()+"probando  "+ vertices.get(j).getNombre()+ "tammm "+ caminos2.size());
                 ArrayList<Vertice> verticesAux = pasarArreglo(caminos2) ;
                 if (!contiene(caminos2, vertices.get(j))) {
                     CaminosR(caminos2, j, indiceFin);
@@ -229,15 +228,14 @@ public class Grafos {
             
             System.out.print(imprimir);
         }
-        System.out.println(caminosRecorridos.size() + "tam recorridos");
         ArrayList<Recorrido> recorridosC = new ArrayList();
         double minimo = 0;
-
+         Arista arista = new Arista(); 
         if (medio = true) {
             double suma = 0;
             if (opcion == 0) {
+                suma =0;
                 for (int i = 0; i < caminosRecorridos.size(); i++) {
-                    Arista arista = new Arista(); 
                     Recorrido recorrido = new Recorrido();
                     recorrido.setVertices(caminosRecorridos.get(i));
                     recorrido.setId(i + 1);
@@ -246,15 +244,18 @@ public class Grafos {
                     for (int j = 0; j < caminosRecorridos.get(i).size()-1; j++) {
                         Vertice vertice = caminosRecorridos.get(i).get(j);
                         Vertice verticeSal = caminosRecorridos.get(i).get(j+1);
-                        if(arista.ObtenerIndiceArista( vertice.getAdyacentes(),vertice)>-1){
+                         System.out.println("entrada "+ vertice.getNombre()+ "  salida: "+ verticeSal.getNombre());
+                        if(arista.ObtenerIndiceArista( vertice.getAdyacentes(),verticeSal)>-1){
                             suma = suma + vertice.getAdyacentes().get(arista.ObtenerIndiceArista( vertice.getAdyacentes(),verticeSal)).getDato().getDistancia();
-                            recorrido.setPeso(suma);
+                            
                         }
+                        
                     }
+                    recorrido.setPeso(suma);
                     recorridosC.add(recorrido);
                 }
             } else if (opcion == 1) {
-
+                suma =0;
                 for (int i = 0; i < caminosRecorridos.size(); i++) {
                     Recorrido recorrido = new Recorrido();
                     recorrido.setVertices(caminosRecorridos.get(i));
@@ -263,12 +264,19 @@ public class Grafos {
                     recorrido.setOrigen(caminosRecorridos.get(i).get(caminosRecorridos.get(i).size() - 1));
                     for (int j = 0; j < caminosRecorridos.get(i).size() - 1; j++) {
                         Vertice vertice = caminosRecorridos.get(i).get(j);
-                        suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getConsumoGas();
-
+                        Vertice verticeSal = caminosRecorridos.get(i).get(j+1);
+                         System.out.println("entrada "+ vertice.getNombre()+ "  salida: "+ verticeSal.getNombre());
+                        if(arista.ObtenerIndiceArista( vertice.getAdyacentes(),verticeSal)>-1){
+                            suma = suma + vertice.getAdyacentes().get(arista.ObtenerIndiceArista( vertice.getAdyacentes(),verticeSal)).getDato().getConsumoGas();
+                            
+                        }
+                        
                     }
+                    recorrido.setPeso(suma);
                     recorridosC.add(recorrido);
                 }
             } else {
+                suma =0;
                 for (int i = 0; i < caminosRecorridos.size(); i++) {
                     Recorrido recorrido = new Recorrido();
                     recorrido.setVertices(caminosRecorridos.get(i));
@@ -277,15 +285,15 @@ public class Grafos {
                     recorrido.setOrigen(caminosRecorridos.get(i).get(caminosRecorridos.get(i).size() - 1));
                     for (int j = 0; j < caminosRecorridos.get(i).size() - 1; j++) {
                         Vertice vertice = caminosRecorridos.get(i).get(j);
-                        if (caminosRecorridos.get(i).size() > 1) {
-                            suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getDistancia();
+                        Vertice verticeSal = caminosRecorridos.get(i).get(j+1);
+                         System.out.println("entrada "+ vertice.getNombre()+ "  salida: "+ verticeSal.getNombre());
+                        if(arista.ObtenerIndiceArista( vertice.getAdyacentes(),verticeSal)>-1){
                             suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getConsumoGas();
-                        }else{
                             suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getDistancia();
-                            suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getConsumoGas();
                         }
-                        recorrido.setPeso(suma / 2);
+                        
                     }
+                    recorrido.setPeso(suma / 2);
                     recorridosC.add(recorrido);
                 }
             }
@@ -293,19 +301,27 @@ public class Grafos {
             double suma = 0;
             if (opcion == 0) {
                 for (int i = 0; i < caminosRecorridos.size(); i++) {
+                   
                     Recorrido recorrido = new Recorrido();
                     recorrido.setVertices(caminosRecorridos.get(i));
                     recorrido.setId(i + 1);
                     recorrido.setDestino(caminosRecorridos.get(i).get(0));
                     recorrido.setOrigen(caminosRecorridos.get(i).get(caminosRecorridos.get(i).size() - 1));
-                    for (int j = 0; j < caminosRecorridos.get(i).size() - 1; j++) {
+                    for (int j = 0; j < caminosRecorridos.get(i).size()-1; j++) {
                         Vertice vertice = caminosRecorridos.get(i).get(j);
-                        suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getDistancia();
-                        recorrido.setPeso(suma);
+                        Vertice verticeSal = caminosRecorridos.get(i).get(j+1);
+                         System.out.println("entrada "+ vertice.getNombre()+ "  salida: "+ verticeSal.getNombre());
+                        if(arista.ObtenerIndiceArista( vertice.getAdyacentes(),verticeSal)>-1){
+                            suma = suma + vertice.getAdyacentes().get(arista.ObtenerIndiceArista( vertice.getAdyacentes(),verticeSal)).getDato().getDistancia();
+                           
+                        }
                     }
+                     recorrido.setPeso(suma);
                     recorridosC.add(recorrido);
+                
                 }
             } else if (opcion == 1) {
+                suma =0;
                 for (int i = 0; i < caminosRecorridos.size(); i++) {
                     Recorrido recorrido = new Recorrido();
                     recorrido.setVertices(caminosRecorridos.get(i));
@@ -313,12 +329,19 @@ public class Grafos {
                     recorrido.setDestino(caminosRecorridos.get(i).get(0));
                     recorrido.setOrigen(caminosRecorridos.get(i).get(caminosRecorridos.get(i).size() - 1));
                     for (int j = 0; j < caminosRecorridos.get(i).size() - 1; j++) {
-                        Vertice vertice = caminosRecorridos.get(i).get(j);
-                        suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getDesgastePersona();
+                         Vertice vertice = caminosRecorridos.get(i).get(j);
+                        Vertice verticeSal = caminosRecorridos.get(i).get(j+1);
+                         System.out.println("entrada "+ vertice.getNombre()+ "  salida: "+ verticeSal.getNombre());
+                        if(arista.ObtenerIndiceArista( vertice.getAdyacentes(),verticeSal)>-1){
+                            suma = suma + vertice.getAdyacentes().get(arista.ObtenerIndiceArista( vertice.getAdyacentes(),verticeSal)).getDato().getDesgastePersona();
+                            
+                        }
                     }
+                    recorrido.setPeso(suma);
                     recorridosC.add(recorrido);
                 }
             } else {
+                suma =0;
                 for (int i = 0; i < caminosRecorridos.size(); i++) {
                     Recorrido recorrido = new Recorrido();
                     recorrido.setVertices(caminosRecorridos.get(i));
@@ -327,10 +350,17 @@ public class Grafos {
                     recorrido.setOrigen(caminosRecorridos.get(i).get(caminosRecorridos.get(i).size() - 1));
                     for (int j = 0; j < caminosRecorridos.get(i).size() - 1; j++) {
                         Vertice vertice = caminosRecorridos.get(i).get(j);
-                        suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getDesgastePersona();
-                        suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getDistancia();
-                        recorrido.setPeso(suma / 2);
+                        Vertice verticeSal = caminosRecorridos.get(i).get(j+1);
+                        System.out.println("entrada "+ vertice.getNombre()+ "  salida: "+ verticeSal.getNombre());
+                        if(arista.ObtenerIndiceArista( vertice.getAdyacentes(),verticeSal)>-1){
+                            //Vertice vertice = caminosRecorridos.get(i).get(j);
+                            suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getDesgastePersona();
+                            suma = suma + vertice.getAdyacentes().get(CalcularIndice(vertices, caminosRecorridos.get(i).get(j + 1).getNombre())).getDato().getDistancia();
+                        
+                        }
+                        
                     }
+                    recorrido.setPeso(suma / 2);
                     recorridosC.add(recorrido);
                 }
             }

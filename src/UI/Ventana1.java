@@ -9,6 +9,7 @@ import Backend.Arbol;
 import Backend.Dato;
 import Backend.Grafos.Grafos;
 import Backend.Grafos.Vertice;
+import Backend.Recorrido;
 import java.awt.Image;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
@@ -23,6 +24,7 @@ public class Ventana1 extends javax.swing.JPanel {
     Grafos grafo = new Grafos();
     public static String medio = null;
     ArrayList<Dato> datos = null;
+    ArrayList<Recorrido>recorrido;
 
     /**
      * Creates new form Ventana1
@@ -126,6 +128,11 @@ public class Ventana1 extends javax.swing.JPanel {
         ComboDestino3.setFont(new java.awt.Font("URW Bookman L", 3, 20)); // NOI18N
         ComboDestino3.setForeground(new java.awt.Color(1, 1, 1));
         ComboDestino3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ComboDestino3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ComboDestino3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout comboOrigenLayout = new javax.swing.GroupLayout(comboOrigen);
         comboOrigen.setLayout(comboOrigenLayout);
@@ -259,6 +266,16 @@ public class Ventana1 extends javax.swing.JPanel {
         comboDestino.setFont(new java.awt.Font("URW Bookman L", 3, 20)); // NOI18N
         comboDestino.setForeground(new java.awt.Color(1, 1, 1));
         comboDestino.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboDestino.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboDestinoItemStateChanged(evt);
+            }
+        });
+        comboDestino.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                comboDestinoMouseClicked(evt);
+            }
+        });
         comboDestino.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboDestinoActionPerformed(evt);
@@ -358,7 +375,7 @@ public class Ventana1 extends javax.swing.JPanel {
         );
 
         jButton1.setBackground(new java.awt.Color(191, 15, 11));
-        jButton1.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jButton1.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         jButton1.setForeground(new java.awt.Color(254, 254, 254));
         jButton1.setText("X");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -373,8 +390,8 @@ public class Ventana1 extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(comboOrigen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(imagenPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -405,21 +422,27 @@ public class Ventana1 extends javax.swing.JPanel {
 
     private void btnBuscarRutasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarRutasActionPerformed
         Arbol arbol = new Arbol();
+        ArrayList<Recorrido> recorr = new ArrayList();
         Vertice verticeOrigen = grafo.getVertices().get(ComboOrigen.getSelectedIndex());
         Vertice verticeDestino = grafo.getVertices().get(ComboDestino3.getSelectedIndex());
         if("A Pie".equals(medio)){
             int opcion =   ComboAPie.getSelectedIndex();
             grafo.setCaminosRecorridos();
             grafo.CrearRecorridos(verticeOrigen ,  verticeDestino );
+            recorr = grafo.CalcularMenorRecorrido(opcion, false);
             arbol.cerearArbol(grafo.CalcularMenorRecorrido(opcion, false));
+            llenarRtuas(arbol, recorr);
         }else{
             int opcion =   ComboAPie.getSelectedIndex();
             grafo.setCaminosRecorridos();
             grafo.CrearRecorridos( verticeOrigen , verticeDestino);
+            recorr = grafo.CalcularMenorRecorrido(opcion, false);
             arbol.cerearArbol(grafo.CalcularMenorRecorrido(opcion, true));
+            llenarRtuas(arbol,recorr);
         }
-        
+        arbol.crearDotArbol(recorr);
         panelIrRutas.setVisible(true);
+        insertarImagen();
     }//GEN-LAST:event_btnBuscarRutasActionPerformed
 
     private void btnIrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIrActionPerformed
@@ -453,6 +476,18 @@ public class Ventana1 extends javax.swing.JPanel {
 
 
     }//GEN-LAST:event_imagenPanelComponentResized
+
+    private void comboDestinoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboDestinoItemStateChanged
+        
+    }//GEN-LAST:event_comboDestinoItemStateChanged
+
+    private void ComboDestino3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboDestino3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ComboDestino3ActionPerformed
+
+    private void comboDestinoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboDestinoMouseClicked
+        LlenarPuntosRuta();
+    }//GEN-LAST:event_comboDestinoMouseClicked
     String fondo = "grafo.png";
     JLabel imagen = new JLabel();
     ImageIcon portada;
@@ -514,6 +549,31 @@ public class Ventana1 extends javax.swing.JPanel {
             }
         }
 
+    }
+    
+    public void LlenarPuntosRuta(){
+        puntosRuta.removeAllItems();
+        if(recorrido.size()>0){
+            if(recorrido.get(comboDestino.getSelectedIndex()).getVertices()!=null){
+                for (int i = 0; i < recorrido.get(comboDestino.getSelectedIndex()).getVertices().size(); i++) {
+                    puntosRuta.addItem(recorrido.get(comboDestino.getSelectedIndex()).getVertices().get(i).getNombre());
+                }
+            }
+        }
+        
+    }
+       
+    public void llenarRtuas(Arbol arbol, ArrayList<Recorrido> recorr){
+        arbol.dibujarArbol(arbol.getRaiz());
+        comboDestino.removeAllItems();
+        arbol.RecorrerArbol(arbol.getRaiz());
+        recorrido= recorr;
+        System.out.println("Arbol TAM" + recorrido.size());
+        System.out.println("Raiz arbil "+ arbol.getRaiz().claves[0].getId());
+        for (int i = 0; i < recorrido.size(); i++) {
+           
+           comboDestino.addItem(Integer.toString(recorrido.get(i).getId()));
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

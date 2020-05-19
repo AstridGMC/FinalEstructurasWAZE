@@ -5,6 +5,12 @@
  */
 package Backend;
 
+import Backend.Grafos.Arista;
+import static Backend.Grafos.Grafos.dibujar;
+import Backend.Grafos.Vertice;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 /**
@@ -20,8 +26,19 @@ public class Arbol {
     boolean esRaiz;
     public ArrayList<Recorrido> datosAlmacenados = new ArrayList();
 
+    public Nodo getRaiz() {
+        return raiz;
+    }
+
+    public void setRaiz(Nodo raiz) {
+        this.raiz = raiz;
+    }
+
+    
+    
     public void cerearArbol(ArrayList<Recorrido> datos) {
         for (int i = 0; i < datos.size(); i++) {
+            System.out.println("Recorrido numero " +i+1+ "es " + datos.get(i).id);
             InsertarNodo(datos.get(i));
         }
         System.out.println("el tama;o de datos en El arbol de recorrridos es "+ datos.size());
@@ -29,6 +46,7 @@ public class Arbol {
 
     public void InsertarNodo(Recorrido recorrido) {
         if (raiz == null) {
+            System.out.println("insertando recorrido "+recorrido.id);
             numeroDatos++;
             raiz = new Nodo();
             raiz.claves[0] = recorrido;
@@ -279,14 +297,14 @@ public class Arbol {
     }
     int aux1 = 1;
     int nivel = 1;
-
-    public ArrayList<Recorrido> RecorrerArbol(Nodo nodo1) {
-        ArrayList<Recorrido> recorridos = new ArrayList();
+    public ArrayList<Recorrido> recorridosArbol = new ArrayList();
+    public void RecorrerArbol(Nodo nodo1) {
+        
         for (int i = 0; i < orden + 1; i++) {
             if (nodo1.hijos[i] != null) {
                 if (i == 0) {
                     nivel++;
-                    aux1++;
+                    aux1=1;
                 } else {
                     aux1++;
                 }
@@ -295,11 +313,10 @@ public class Arbol {
 
             for (int j = 0; nodo1.hijos[i] != null && j < nodo1.hijos[i].claves.length; j++) {
                 if (nodo1.hijos[i] != null) {
-                    recorridos.add(nodo1.hijos[i].claves[j]);
+                    recorridosArbol.add(nodo1.hijos[i].claves[j]);
                 }
             }
         }
-        return recorridos;
     }
 
     // busca el nodo que contiene el elemento a eliminar
@@ -576,5 +593,122 @@ public class Arbol {
             return null;
         }
     }
+    String arbol="";
+    int imprimir =1;
+    
+    public String dibujarArbol(Nodo nodo) {
+         arbol += "\n";
+        for (int i =0; i<orden+1; i++) {
+            if (nodo.hijos[i] != null) {
+                if (i == 0) {
+                    nivel++;
+                    imprimir = 1;
+                } else {
+                    imprimir ++;
+                }
+                dibujarArbol(nodo.hijos[i]);
+            }
+            
+            if(nodo == raiz){
+                arbol += "[ ";
+                String nombres = "";
+                for (int j = 0; nodo.claves[j]!=null && j<nodo.claves.length; j++) {
+                    if (nodo.claves[j] != null) {
+                        nombres += nodo.claves[j].getId() + ", ";
+                    }
+                }
+                arbol += (nombres + " ]");
+            }
+            
+            arbol += "..[ ";
+            for (int j = 0; nodo.hijos[i]!=null && j<nodo.hijos[i].claves.length; j++) {
+                if (nodo.hijos[i].claves[j] != null) {
+                    arbol += nodo.hijos[i].claves[j] + ", ";
+                }
+            }
+            arbol += " ]";
+        }
+        if (arbol.length() > (orden)*4) {
+            System.out.println (arbol);
+            return arbol;
+        }
+        return arbol;
+    }
+    
+    public void crearDotArbol(ArrayList<Recorrido> recorridos){
+       String flecha = " ->  ";
+        String archivoDot = " digraph G \n  {  "
+                + "node [shape=circle];\n"
+                + " node [style=filled];\n"
+                + " node [fillcolor=\"#EEEEEE\"];\n"
+                + " node [color=\"#EEEEEE\"];\n"
+                + " edge [color=\"#33CEF0\"];";
+        String fin = "rankdir=LR;\n" + "}";
+        String verticesS = "\n";
+        System.out.println(recorridos.size());
+        System.out.println("pintando Recorridos SIZE..... "+ recorridos.size());
+        for (int i = 0; i < recorridos.size(); i++) {
+            verticesS += ObtenerCaminosVer(recorridos.get(i).getVertices());
+        }
 
+        creador(archivoDot + verticesS + fin); 
+    }
+    
+    
+    public String ObtenerCaminosVer(ArrayList<Vertice> vertices){
+        String flecha = " ->  ";
+        String caminos="";
+        for (int i = 0; i < vertices.size(); i++) {
+            if(i==vertices.size()-1){
+               caminos+= vertices.get(i).getNombre()+";\n";
+            }else{
+                caminos += vertices.get(i).getNombre() + flecha;
+            }
+        }
+        return  caminos;
+    }
+    String direccionPng;
+        public boolean creador(String texto) {
+        try {
+            File miDir = new File(".");
+            String ruta = miDir.getCanonicalPath() + "/dibujo.dot";
+            System.out.println(miDir.getCanonicalPath());
+            String contenido = texto;
+            File file = new File(ruta);
+            // Si el archivo no existe es creado
+            if (!file.exists()) {
+                file.createNewFile();
+            } else {
+
+            }
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write("");
+            bw.write(contenido);
+            bw.close();
+
+            direccionPng = miDir.getCanonicalPath() + "/grafo.png";
+            dibujar(ruta, direccionPng);
+            System.out.println("se ha dibujado la Ruta");
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+        public static void dibujar(String direccionDot, String direccionPng) {
+        try {
+            ProcessBuilder pbuilder;
+
+            pbuilder = new ProcessBuilder("dot", "-Tpng", "-o", direccionPng, direccionDot);
+            pbuilder.redirectErrorStream(true);
+            //Ejecuta el proceso
+            pbuilder.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+        
 }
