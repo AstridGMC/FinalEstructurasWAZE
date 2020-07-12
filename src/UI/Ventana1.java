@@ -9,6 +9,7 @@ import Backend.Arbol;
 import Backend.Dato;
 import Backend.Grafos.Grafos;
 import Backend.Grafos.Vertice;
+import Backend.ListaEnlazada.ListaEnlazadaDobleC;
 import Backend.Recorrido;
 import java.awt.Desktop;
 import java.awt.Image;
@@ -33,11 +34,12 @@ import javax.swing.JOptionPane;
  */
 public class Ventana1 extends javax.swing.JPanel {
 
+    ListaEnlazadaDobleC<Recorrido> listaRecorridosFab= new ListaEnlazadaDobleC();
     Grafos grafo = new Grafos();
     public static String medio = null;
     ArrayList<Dato> datos = null;
     ArrayList<Recorrido> recorrido;
-
+     Recorrido favorito;
     /**
      * Creates new form Ventana1
      *
@@ -88,6 +90,8 @@ public class Ventana1 extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         lblDist = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        idFav = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         imagenPanel = new javax.swing.JPanel();
@@ -300,11 +304,18 @@ public class Ventana1 extends javax.swing.JPanel {
         jLabel9.setText("se mueve");
 
         jLabel10.setFont(new java.awt.Font("URW Bookman L", 0, 16)); // NOI18N
-        jLabel10.setText("Distancia en esta ruta:");
+        jLabel10.setText("Distancia de ruta:");
 
         lblDist.setFont(new java.awt.Font("URW Chancery L", 1, 24)); // NOI18N
         lblDist.setForeground(new java.awt.Color(22, 0, 0));
         lblDist.setText("00");
+
+        jLabel11.setFont(new java.awt.Font("URW Bookman L", 0, 16)); // NOI18N
+        jLabel11.setText("Ruta Favorita:");
+
+        idFav.setFont(new java.awt.Font("URW Chancery L", 1, 24)); // NOI18N
+        idFav.setForeground(new java.awt.Color(22, 0, 0));
+        idFav.setText("id");
 
         javax.swing.GroupLayout panelIrRutasLayout = new javax.swing.GroupLayout(panelIrRutas);
         panelIrRutas.setLayout(panelIrRutasLayout);
@@ -328,22 +339,29 @@ public class Ventana1 extends javax.swing.JPanel {
                 .addComponent(mejorRuta, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27))
             .addGroup(panelIrRutasLayout.createSequentialGroup()
-                .addGroup(panelIrRutasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel10)
-                    .addGroup(panelIrRutasLayout.createSequentialGroup()
-                        .addComponent(lblDist, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(56, 56, 56)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(panelIrRutasLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelIrRutasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel8)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelIrRutasLayout.createSequentialGroup()
+                        .addComponent(btnIr, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(panelIrRutasLayout.createSequentialGroup()
+                        .addGroup(panelIrRutasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(comboDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelIrRutasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel9)
+                                .addComponent(jLabel8)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(panelIrRutasLayout.createSequentialGroup()
+                .addGroup(panelIrRutasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelIrRutasLayout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblDist, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelIrRutasLayout.createSequentialGroup()
+                        .addComponent(jLabel11)
                         .addGap(18, 18, 18)
-                        .addComponent(comboDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnIr, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(idFav, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelIrRutasLayout.setVerticalGroup(
             panelIrRutasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -351,14 +369,18 @@ public class Ventana1 extends javax.swing.JPanel {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(mejorRuta)
-                .addGap(3, 3, 3)
-                .addComponent(jLabel4)
                 .addGap(1, 1, 1)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(comboDestino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(4, 4, 4)
-                .addComponent(lblDist, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelIrRutasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDist, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16)
+                .addGroup(panelIrRutasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(idFav, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -409,7 +431,7 @@ public class Ventana1 extends javax.swing.JPanel {
         );
         imagenPanelLayout.setVerticalGroup(
             imagenPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 328, Short.MAX_VALUE)
+            .addGap(0, 337, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("RUTAS", imagenPanel);
@@ -422,7 +444,7 @@ public class Ventana1 extends javax.swing.JPanel {
         );
         arbolPanelLayout.setVerticalGroup(
             arbolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 332, Short.MAX_VALUE)
+            .addGap(0, 341, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("ARBOL", arbolPanel);
@@ -476,7 +498,7 @@ public class Ventana1 extends javax.swing.JPanel {
     private void ComboOrigenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboOrigenActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ComboOrigenActionPerformed
-
+    ArrayList<Recorrido> miRecorrido = new ArrayList();
     private void btnBuscarRutasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarRutasActionPerformed
         Arbol arbol = new Arbol();
         ArrayList<Recorrido> recorr = new ArrayList();
@@ -506,6 +528,13 @@ public class Ventana1 extends javax.swing.JPanel {
         } else {
             grafo.CrearImagenGrafoDirigidoPrincipalRECORRIDO(recorr);
         }
+        miRecorrido= recorr;
+        favorito = listaRecorridosFab.ObtenerCaminoFavorito(listaRecorridosFab,verticeOrigen.getNombre(), verticeDestino.getNombre());
+        if(favorito!=null){
+            idFav.setText(String.valueOf(favorito.getId()));
+        }else{
+            idFav.setText("sin Fav");
+        }
         //arbol.crearDotArbol(recorr);
         arbol.creadorArbol(arbol.CrearDotArbol(arbol.getRaiz()));
         panelIrRutas.setVisible(true);
@@ -514,7 +543,7 @@ public class Ventana1 extends javax.swing.JPanel {
 
     private void btnIrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIrActionPerformed
         //Vertice final1 = grafo.getVertices().get(grafo.ObtenerIndiceVertice(ComboDestino3.getSelectedItem().toString()));
-
+        ingresarCaminos(miRecorrido.get(ComboAPie.getSelectedIndex()));
         Vertice verticeOrigen = grafo.getVertices().get(buscarIndice(grafo.getVertices(), puntosRuta.getSelectedItem().toString()));
         System.out.println(" BUSCANDO--------" + verticeOrigen.getNombre());
         Arbol arbol = new Arbol();
@@ -540,12 +569,20 @@ public class Ventana1 extends javax.swing.JPanel {
             arbol.cerearArbol(grafo.CalcularMenorRecorrido(opcion, true));
             llenarRtuas(arbol, recorr);
         }
+        miRecorrido= recorr;
 
         if ("A Pie".equals(medio)) {
             //System.out.println("grafo no dirigido ");
             grafo.CrearImagenGrafoNODirigidoRECORRIDO(recorr);
         } else {
             grafo.CrearImagenGrafoDirigidoPrincipalRECORRIDO(recorr);
+        }
+        
+        favorito = listaRecorridosFab.ObtenerCaminoFavorito(listaRecorridosFab,verticeOrigen.getNombre(), verticeDestino.getNombre());
+        if(favorito!=null){
+            idFav.setText(String.valueOf(favorito.getId()));
+        }else{
+            idFav.setText("sin Fav");
         }
         arbol.creadorArbol(arbol.CrearDotArbol(arbol.getRaiz()));
         //arbol.crearDotArbol(recorr);
@@ -749,6 +786,36 @@ public class Ventana1 extends javax.swing.JPanel {
         }
         return 0;
     }
+    
+    public int obtenerIndiceLista(Recorrido recorrido ){
+        
+        for (int i = 0; i < listaRecorridosFab.Size(); i++) {
+            if(listaRecorridosFab.obtenerObjeto(i).equals(recorrido)){
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    public void ingresarCamino(Recorrido recorrido){
+        if(obtenerIndiceLista(recorrido )<0){
+            listaRecorridosFab.insertarFinal(recorrido);
+            System.out.println( listaRecorridosFab.Size()+ "TAM DE LA LISTA DE FAVORITOS");
+        }else{
+            aumentarNumeroRecorrido( recorrido);
+        }
+    }
+    
+    public void ingresarCaminos(Recorrido recorrido){
+            ingresarCamino(recorrido);
+        
+    }
+    
+    public void aumentarNumeroRecorrido(Recorrido recorrido){
+        int indice = obtenerIndiceLista(recorrido );
+        int numero =listaRecorridosFab.obtenerNumero(indice);
+        listaRecorridosFab.obtenerNodo(indice).setNumeroUsos(numero+1);
+    }
 
     public void llenarRtuas(Arbol arbol, ArrayList<Recorrido> recorr) {
         arbol.dibujarArbol(arbol.getRaiz());
@@ -775,11 +842,13 @@ public class Ventana1 extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> comboDestino;
     private javax.swing.JPanel comboOrigen;
     private javax.swing.JButton guardaImagen;
+    private javax.swing.JLabel idFav;
     private javax.swing.JLabel imagTransporte;
     private javax.swing.JPanel imagenPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
