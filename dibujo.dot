@@ -1,12 +1,8 @@
  digraph G 
-  {  node [shape=circle];
- node [style=filled];
- node [fillcolor="#EEEEEE"];
- node [color="#EEEEEE"];
- edge [color="#33CEF0"];
-A ->  E;
-A ->  B ->  E;
-A ->  B ->  C ->  E;
-A ->  C ->  E;
-rankdir=LR;
+  {  edge[dir = none];
+ graph[ordering = "out"];
+sanmarcos ->  quetzaltengo ->  solola ->  chimaltenago ->  guatemala;
+sanmarcos ->  quetzaltengo ->  retalhuleu ->  suchitepequez ->  guatemala;
+labelloc="t";
+    label="MEJOR RUTA:sanmarcos -  quetzaltengo -  solola -  chimaltenago -  guatemala;";rankdir=LR;
 }

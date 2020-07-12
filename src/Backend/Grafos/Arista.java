@@ -112,10 +112,10 @@ public class Arista {
      public int ObtenerIndiceArista(ArrayList<Arista> aristas, Vertice vt){
          for (int i = 0; i < aristas.size(); i++) {
             if(aristas.get(i).getVer2()==vt){
-                System.out.println("la salida encontrada es "+ vt.getNombre());
+                //System.out.println("la salida encontrada es "+ vt.getNombre());
                  return i;
             }else{
-                System.out.println(aristas.get(i).getVer2().getNombre()+"......la salida NOOOOO encontrada es "+ vt.getNombre()+ aristas.size());
+                //System.out.println(aristas.get(i).getVer2().getNombre()+"......la salida NOOOOO encontrada es "+ vt.getNombre()+ aristas.size());
             }
          }
          return -1;

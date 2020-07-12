@@ -142,7 +142,7 @@ public class Principal extends javax.swing.JFrame {
                      if(lector.IdentificarDatos(fileName.getAbsolutePath())){
                         
                         datos = lector.getDatos();
-                         System.out.println(datos.size()+ "tam datos");
+                        // System.out.println(datos.size()+ "tam datos");
                         JOptionPane.showMessageDialog(null, "Las Rutas se Han Cargado Con Exito ");
                     }else{
                         JOptionPane.showMessageDialog(null, "Error Cargando Rutas ");
@@ -168,7 +168,7 @@ public class Principal extends javax.swing.JFrame {
             panelPrincipal.removeAll();
             
             if(!elegir.isVisible()){
-                System.out.println("entro");
+                //System.out.println("entro");
                 panelPrincipal.setVisible(false);
                 panelPrincipal.setLayout(new GridLayout(1, 1));
                 Ventana1 ventana =new Ventana1(datos);

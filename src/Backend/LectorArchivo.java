@@ -7,6 +7,7 @@ package Backend;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -37,7 +38,7 @@ public class LectorArchivo {
     
     
     
-    //<origen>|<destino>|<tiempo_vehiculo>|<tiempo_pie>|<consumo_gas>|<desgaste_persona>
+    //<origen>|<destino>|<tiempo_vehiculo>|<tiempo_pie>|<consumo_gas>|<desgaste_persona>|<distancia>
     public boolean IdentificarDatos(String path){
         datos = new ArrayList();
         String separarLineas[];
@@ -46,17 +47,18 @@ public class LectorArchivo {
         String separador = Pattern.quote("|");
         for (int i = 0; i < separarLineas.length; i++) {
              String[] separarDatos= separarLineas[i].split(String.valueOf(separador));
-            if(separarDatos.length ==6){
+            if(separarDatos.length ==7){
                 Dato dato = new Dato();
-                dato.origen = separarDatos[0];
-                String destino =separarDatos[1];
+                dato.origen = limpiarAcentos(separarDatos[0]);
+                String destino =limpiarAcentos(separarDatos[1]);
                 dato.setDestino(destino);
                 dato.tiempoVehiculo = Double.parseDouble(separarDatos[2]);
                 dato.tiempoPie = Double.parseDouble(separarDatos[3]);
                 dato.consumoGas = Double.parseDouble(separarDatos[4]);
                 dato.desgastePersona = Double.parseDouble(separarDatos[5]);
+                dato.distancia = Double.parseDouble(separarDatos[5]);
                 datos.add(dato);
-                System.out.println(datos.size()+ "lecArDato");
+                //System.out.println(datos.size()+ "lecArDato");
             }   
         }
         if( separarLineas.length > 0){
@@ -81,24 +83,19 @@ public class LectorArchivo {
             return "";
         }
     }
-    
-    
-    public void separarDaatos(String datosASeparar[]){
-        for (int j = 0; j < datosASeparar.length; j++) {
-                    if(j==0){
-                    }else if(j==1){
-                        
-                    }else if(j==2){
-                        
-                    }else if(j==3){
-                        
-                    }else if(j==4){
-                        
-                    }else if(j==5){
-                        
-                    }else if(j==6){
-                        
-                    }
+
+    public static String limpiarAcentos(String cadena) {
+    String limpio =null;
+    if (cadena !=null) {
+        String valor = cadena;
+        valor = valor.toUpperCase();
+        // Normalizar texto para eliminar acentos, dieresis, cedillas y tildes
+        limpio = Normalizer.normalize(valor, Normalizer.Form.NFD);
+        // Quitar caracteres no ASCII excepto la enie, interrogacion que abre, exclamacion que abre, grados, U con dieresis.
+        limpio = limpio.replaceAll("[^\\p{ASCII}(N\u0303)(n\u0303)(\u00A1)(\u00BF)(\u00B0)(U\u0308)(u\u0308)]", "");
+        // Regresar a la forma compuesta, para poder comparar la enie con la tabla de valores
+        limpio = Normalizer.normalize(limpio, Normalizer.Form.NFC);
     }
-    }
+    return limpio;
+}
 }

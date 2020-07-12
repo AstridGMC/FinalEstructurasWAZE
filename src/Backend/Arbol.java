@@ -22,9 +22,9 @@ public class Arbol {
     static int orden = 5;
     int numeroDatos = 0;
     int numHijos = orden + 1;
-    Nodo raiz;
+    public Nodo raiz;
     boolean esRaiz;
-    public ArrayList<Recorrido> datosAlmacenados = new ArrayList();
+    public ArrayList<Recorrido> datosAlmacenados;
 
     public Nodo getRaiz() {
         return raiz;
@@ -34,48 +34,83 @@ public class Arbol {
         this.raiz = raiz;
     }
 
-    
-    
+    public Arbol() {
+        raiz = new Nodo();
+    }
+
     public void cerearArbol(ArrayList<Recorrido> datos) {
+        datosAlmacenados = new ArrayList();
         for (int i = 0; i < datos.size(); i++) {
-            System.out.println("Recorrido numero " +i+1+ "es " + datos.get(i).id);
+
+            //System.out.println("Recorrido numero " +i+1+ "es " + datos.get(i).id);
             InsertarNodo(datos.get(i));
         }
-        System.out.println("el tama;o de datos en El arbol de recorrridos es "+ datos.size());
+        System.out.println("el tama;o de datos en El arbol de recorrridos es " + datos.size());
     }
 
     public void InsertarNodo(Recorrido recorrido) {
-        if (raiz == null) {
-            System.out.println("insertando recorrido "+recorrido.id);
-            numeroDatos++;
-            raiz = new Nodo();
-            raiz.claves[0] = recorrido;
-        } else {
-            numeroDatos++;
+
+        numeroDatos++;
+        System.out.println("HIJOS DE LA RAIZ");
+        if (raiz.tengoHijos == false) {
             int i = 0;
-            if (raiz.tengoHijos == false) {
-                for (int j = 0; j < raiz.claves.length; j++) {
-                    if (raiz.hijos[j] == null) {
-                        raiz.claves[i] = recorrido;
-                        datosAlmacenados.add(recorrido);
-                        j = i;
-                        ordenarBurbuja(raiz.claves, 0);
-                        break;
-                    }
+            for (int j = 0; j < raiz.claves.length; j++) {
+                if (raiz.claves[j] == null) {
+
+                    raiz.claves[j] = recorrido;
+                    datosAlmacenados.add(recorrido);
+                    i = j;
+                    ordenarBurbuja(raiz.claves, 0);
+                    System.out.println("numeroValores: " + numeroClaves(raiz));
+                    System.out.println("numero de Hijos: " + numeroHijos(raiz));
+                    System.out.println("valor: " + recorrido.getId());
+                    System.out.println("ultimoValor: " + raiz.claves[ultimaClave(raiz.claves) - 1] + "\n\n");
+                    break;
                 }
-                if (i == orden) {
-                    dividirYAcomodar(raiz);
-                }
-            } else {
-                SetTengoHijos(raiz);
-                IngresarEnHijos(raiz, recorrido);
+            }
+            if (i == orden) {
+                dividirYAcomodar(raiz);
+            }
+        } else {
+            SetTengoHijos(raiz);
+            IngresarEnHijos(raiz, recorrido);
+        }
+
+    }
+
+    public int numeroHijos(Nodo nodo) {
+        int j = 0;
+        for (int i = 0; i < nodo.hijos.length; i++) {
+            if (nodo.hijos[i] != null) {
+                j++;
             }
         }
+        return j;
+    }
+
+    public int numeroClaves(Nodo nodo) {
+        int j = 0;
+        for (int i = 0; i < nodo.claves.length; i++) {
+            if (nodo.claves[i] != null) {
+                j++;
+            }
+        }
+        return j;
+    }
+
+    public int ultimaClave(Recorrido[] claves) {
+        int j = 1;
+        for (int i = 0; i < claves.length; i++) {
+            if (claves[i] != null) {
+                j++;
+            }
+        }
+        return j;
     }
 
     public Nodo buscarHijoMenorDato(Nodo nodo) {
         for (int i = 0; i < nodo.claves.length; i++) {
-            if (nodo.hijos[0].claves != null) {
+            if (nodo.hijos[i].claves != null) {
                 return nodo.hijos[0];
             } else {
                 return null;
@@ -272,6 +307,10 @@ public class Arbol {
                 nodo.claves[cont] = recorrido;
                 ordenarBurbuja(nodo.claves, 0);
                 datosAlmacenados.add(recorrido);
+                System.out.println("numeroValores: " + nodo.claves.length);
+                System.out.println("numero de Hijos: " + numeroHijos(raiz));
+                System.out.println("valor: " + recorrido.getId());
+                System.out.println("ultimoValor: " + raiz.claves[ultimaClave(raiz.claves) - 1] + "\n\n");
                 if (cont == orden) {
                     dividirYAcomodar(nodo);
                 }
@@ -298,22 +337,24 @@ public class Arbol {
     int aux1 = 1;
     int nivel = 1;
     public ArrayList<Recorrido> recorridosArbol = new ArrayList();
-    public void RecorrerArbol(Nodo nodo1) {
-        
-        for (int i = 0; i < orden + 1; i++) {
-            if (nodo1.hijos[i] != null) {
-                if (i == 0) {
-                    nivel++;
-                    aux1=1;
-                } else {
-                    aux1++;
-                }
-                RecorrerArbol(nodo1.hijos[i]);
-            }
 
-            for (int j = 0; nodo1.hijos[i] != null && j < nodo1.hijos[i].claves.length; j++) {
+    public void RecorrerArbol(Nodo nodo1) {
+        if (nodo1 != null) {
+            for (int i = 0; i < orden + 1; i++) {
                 if (nodo1.hijos[i] != null) {
-                    recorridosArbol.add(nodo1.hijos[i].claves[j]);
+                    if (i == 0) {
+                        nivel++;
+                        aux1 = 1;
+                    } else {
+                        aux1++;
+                    }
+                    RecorrerArbol(nodo1.hijos[i]);
+                }
+
+                for (int j = 0; nodo1.hijos[i] != null && j < nodo1.hijos[i].claves.length; j++) {
+                    if (nodo1.hijos[i] != null) {
+                        recorridosArbol.add(nodo1.hijos[i].claves[j]);
+                    }
                 }
             }
         }
@@ -355,7 +396,7 @@ public class Arbol {
         if (nodoAEliminar.claves.length > nodoAEliminar.minimoHijos) {
             eliminarDeNodosClaves(recorrido, nodoAEliminar);
         } else if (nodoAEliminar.claves.length > nodoAEliminar.minimoHijos) {
-            
+
         }
     }
 
@@ -399,9 +440,23 @@ public class Arbol {
                 if (Reequilibrar(nodo, rec.id)) {
                     System.out.println("eliminadoooooo");
                 } else {
-                       System.out.println("no ELIMINADO "); 
+                    System.out.println("no ELIMINADO ");
                 }
             }
+        }
+
+    }
+
+    public void eliminarDatosArbol(Nodo nodo) {
+        if (nodo.tengoHijos) {
+            for (int i = 0; i < nodo.hijos.length; i++) {
+                eliminarDatosArbol(nodo.hijos[i]);
+            }
+        } else {
+            for (int i = 0; i < nodo.claves.length; i++) {
+                nodo.claves[i] = null;
+            }
+
         }
 
     }
@@ -467,17 +522,17 @@ public class Arbol {
 
         }
     }
-    
-    public boolean SuboHijo(Nodo NodoDeHijoASubir, Nodo padre, int indice){
-        if(NodoDeHijoASubir.claves.length> NodoDeHijoASubir.minimoHijos){
+
+    public boolean SuboHijo(Nodo NodoDeHijoASubir, Nodo padre, int indice) {
+        if (NodoDeHijoASubir.claves.length > NodoDeHijoASubir.minimoHijos) {
             Recorrido aux = buscarMenorDato(NodoDeHijoASubir);
-            EliminarClave( aux, NodoDeHijoASubir);
-            padre.claves[indice]= aux;
+            EliminarClave(aux, NodoDeHijoASubir);
+            padre.claves[indice] = aux;
             return true;
-        }else{
+        } else {
             return false;
         }
-       
+
     }
 
     public int BuscarIndiceNodo(Nodo padre, Nodo nodo) {
@@ -518,19 +573,19 @@ public class Arbol {
                 nodo.padre.claves = EliminarClave(padre.claves[indice], padre);
                 ordenarBurbuja(nodo.claves, 0);
             }
-            
-                if(padre.hijos[BuscarIndiceNodo(padre, nodo)+1]!= null){
-                    SuboHijo(padre.hijos[BuscarIndiceNodo(padre, nodo)+1], padre, BuscarIndicePadreMenor(padre, id));
-                    System.out.println("eliminado nodo+1");
-                }else if(padre.hijos[BuscarIndiceNodo(padre, nodo)]!= null){
-                    SuboHijo(padre.hijos[BuscarIndiceNodo(padre, nodo)], padre, BuscarIndicePadreMenor(padre, id));
-                    System.out.println("eliminado nodo ");
-                }else if(JuntarArreglo(nodo, padre.hijos[BuscarIndiceNodo(padre, nodo)+1])!= null){
-                    System.out.println("eliminadi juntar arreglo");
-                }else {
-                    return false;
-                }
-           
+
+            if (padre.hijos[BuscarIndiceNodo(padre, nodo) + 1] != null) {
+                SuboHijo(padre.hijos[BuscarIndiceNodo(padre, nodo) + 1], padre, BuscarIndicePadreMenor(padre, id));
+                System.out.println("eliminado nodo+1");
+            } else if (padre.hijos[BuscarIndiceNodo(padre, nodo)] != null) {
+                SuboHijo(padre.hijos[BuscarIndiceNodo(padre, nodo)], padre, BuscarIndicePadreMenor(padre, id));
+                System.out.println("eliminado nodo ");
+            } else if (JuntarArreglo(nodo, padre.hijos[BuscarIndiceNodo(padre, nodo) + 1]) != null) {
+                System.out.println("eliminadi juntar arreglo");
+            } else {
+                return false;
+            }
+
             return true;
         } else {
             return false;
@@ -539,7 +594,7 @@ public class Arbol {
 
     public Nodo JuntarArreglo(Nodo arreglo1, Nodo arreglo2) {
         Nodo nodo = new Nodo();
-        if (arreglo1.claves.length + arreglo2.claves.length <= orden-1) {
+        if (arreglo1.claves.length + arreglo2.claves.length <= orden - 1) {
             if (!arreglo1.tengoHijos && !arreglo2.tengoHijos) {
                 Recorrido[] rec = new Recorrido[orden - 1];
                 for (int i = 0; i < arreglo1.claves.length; i++) {
@@ -589,54 +644,57 @@ public class Arbol {
                 nodo.tengoHijos = true;
             }
             return nodo;
-        }else{
+        } else {
             return null;
         }
     }
-    String arbol="";
-    int imprimir =1;
-    
+    String arbol = "";
+    int imprimir = 1;
+
     public String dibujarArbol(Nodo nodo) {
-         arbol += "\n";
-        for (int i =0; i<orden+1; i++) {
-            if (nodo.hijos[i] != null) {
-                if (i == 0) {
-                    nivel++;
-                    imprimir = 1;
-                } else {
-                    imprimir ++;
-                }
-                dibujarArbol(nodo.hijos[i]);
-            }
-            
-            if(nodo == raiz){
-                arbol += "[ ";
-                String nombres = "";
-                for (int j = 0; nodo.claves[j]!=null && j<nodo.claves.length; j++) {
-                    if (nodo.claves[j] != null) {
-                        nombres += nodo.claves[j].getId() + ", ";
+        if (nodo != null) {
+            arbol += "\n";
+            for (int i = 0; i < orden + 1; i++) {
+                if (nodo.hijos[i] != null) {
+                    if (i == 0) {
+                        nivel++;
+                        imprimir = 1;
+                    } else {
+                        imprimir++;
                     }
+                    dibujarArbol(nodo.hijos[i]);
                 }
-                arbol += (nombres + " ]");
-            }
-            
-            arbol += "..[ ";
-            for (int j = 0; nodo.hijos[i]!=null && j<nodo.hijos[i].claves.length; j++) {
-                if (nodo.hijos[i].claves[j] != null) {
-                    arbol += nodo.hijos[i].claves[j] + ", ";
+
+                if (nodo == raiz) {
+                    arbol += "[ ";
+                    String nombres = "";
+                    for (int j = 0; nodo.claves[j] != null && j < nodo.claves.length; j++) {
+                        if (nodo.claves[j] != null) {
+                            nombres += nodo.claves[j].getId() + ", ";
+                        }
+                    }
+                    arbol += (nombres + " ]");
+                } else {
+                    arbol += "..[ ";
+                    for (int j = 0; nodo.hijos[i] != null && j < nodo.hijos[i].claves.length; j++) {
+                        if (nodo.hijos[i].claves[j] != null) {
+                            arbol += nodo.hijos[i].claves[j] + ", ";
+                        }
+                    }
+                    arbol += " ]";
                 }
+
             }
-            arbol += " ]";
-        }
-        if (arbol.length() > (orden)*4) {
-            System.out.println (arbol);
-            return arbol;
+            if (arbol.length() > (orden) * 4) {
+                System.out.println(arbol);
+                return arbol;
+            }
         }
         return arbol;
     }
-    
-    public void crearDotArbol(ArrayList<Recorrido> recorridos){
-       String flecha = " ->  ";
+
+    public void crearDotArbol(ArrayList<Recorrido> recorridos) {
+        String flecha = " ->  ";
         String archivoDot = " digraph G \n  {  "
                 + "node [shape=circle];\n"
                 + " node [style=filled];\n"
@@ -646,29 +704,29 @@ public class Arbol {
         String fin = "rankdir=LR;\n" + "}";
         String verticesS = "\n";
         System.out.println(recorridos.size());
-        System.out.println("pintando Recorridos SIZE..... "+ recorridos.size());
+        System.out.println("pintando Recorridos SIZE..... " + recorridos.size());
         for (int i = 0; i < recorridos.size(); i++) {
             verticesS += ObtenerCaminosVer(recorridos.get(i).getVertices());
         }
 
-        creador(archivoDot + verticesS + fin); 
+        creador(archivoDot + verticesS + fin);
     }
-    
-    
-    public String ObtenerCaminosVer(ArrayList<Vertice> vertices){
+
+    public String ObtenerCaminosVer(ArrayList<Vertice> vertices) {
         String flecha = " ->  ";
-        String caminos="";
+        String caminos = "";
         for (int i = 0; i < vertices.size(); i++) {
-            if(i==vertices.size()-1){
-               caminos+= vertices.get(i).getNombre()+";\n";
-            }else{
+            if (i == vertices.size() - 1) {
+                caminos += vertices.get(i).getNombre() + ";\n";
+            } else {
                 caminos += vertices.get(i).getNombre() + flecha;
             }
         }
-        return  caminos;
+        return caminos;
     }
     String direccionPng;
-        public boolean creador(String texto) {
+
+    public boolean creador(String texto) {
         try {
             File miDir = new File(".");
             String ruta = miDir.getCanonicalPath() + "/dibujo.dot";
@@ -697,7 +755,8 @@ public class Arbol {
         }
 
     }
-        public static void dibujar(String direccionDot, String direccionPng) {
+
+    public static void dibujar(String direccionDot, String direccionPng) {
         try {
             ProcessBuilder pbuilder;
 
@@ -710,5 +769,90 @@ public class Arbol {
             e.printStackTrace();
         }
     }
-        
+
+    public String CrearDotArbol(Nodo nodo) {
+        String inicio = "digraph g {\n node [shape = record,height=.1];\n";
+        String nodos = "";
+
+        nodos = nodos + "\"node " + 0 + " \" [label=\"" + definirNodo(nodo) + "\"];\n }";
+
+        String arbolDot = "" + inicio + nodos;
+        return arbolDot;
+    }
+
+    String llenarHijos(Nodo nodo) {
+        String nodos = "";
+
+        if (nodo == raiz) {
+            nodos += " ";
+            String nombres = "";
+            for (int j = 0; nodo.claves[j] != null && j < nodo.claves.length; j++) {
+                if (nodo.claves[j] != null) {
+                    nombres += nodo.claves[j].getId() + "- ";
+                }
+            }
+            nodos += (nombres + " ];");
+        }
+
+        return nodos;
+    }
+
+    String definirNodo(Nodo nodo) {
+        int ent = 0;
+        String nod = "";
+        if (!nodo.tengoHijos) {
+            for (int i = 0; i < 4; i++) {
+                if (i == 0) {
+                    
+                    nod = nod + "<f" + i + ">|" + datosDot(nodo.claves[i].getVertices()) + "|";
+                } else if (i == numeroClaves(nodo) - 1) {
+                    nod = nod + "<f" + i + ">|" + datosDot(nodo.claves[i].getVertices())+ "|";
+                } else {
+                    nod = nod + "<f" + i + ">|" +"        " + "";
+                }
+            }
+        }
+        return nod;
+    }
+    
+    public boolean creadorArbol(String texto) {
+        System.out.println("texto a imiprimir.\n\t"+texto);
+        try {
+            File miDir = new File(".");
+            String ruta = miDir.getCanonicalPath() + "/arbol.dot";
+            System.out.println(miDir.getCanonicalPath());
+            String contenido = texto;
+            File file = new File(ruta);
+            // Si el archivo no existe es creado
+            if (!file.exists()) {
+                file.createNewFile();
+            } else {
+
+            }
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write("");
+            bw.write(contenido);
+            bw.close();
+
+            String direccionPng = miDir.getCanonicalPath() + "/arbol.png";
+            dibujar(ruta, direccionPng);
+            System.out.println("se ha dibujado la Ruta");
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+
+    String datosDot(ArrayList<Vertice> vertices) {
+        String datos = "";
+        for (int i = 0; i < vertices.size(); i++) {
+            datos = datos +"*"+ vertices.get(i).getNombre() + "&#92;n";
+        }
+        return datos;
+    }
+
 }

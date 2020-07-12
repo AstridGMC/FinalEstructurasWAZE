@@ -1,0 +1,4 @@
+digraph g {
+ node [shape = record,height=.1];
+"node 0 " [label="<f0>|*SANMARCOS&#92;n*QUETZALTENGO&#92;n*SOLOLA&#92;n*CHIMALTENAGO&#92;n*GUATEMALA&#92;n|<f1>|*SANMARCOS&#92;n*QUETZALTENGO&#92;n*RETALHULEU&#92;n*SUCHITEPEQUEZ&#92;n*GUATEMALA&#92;n|<f2>|        <f3>|        "];
+ }

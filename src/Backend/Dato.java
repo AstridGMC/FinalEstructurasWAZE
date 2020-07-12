@@ -22,6 +22,7 @@ public class Dato {
     double consumoGas;
     double distancia;    
     boolean dobleVia;
+    double menorTiempo;
 
     public Dato() {
     }
@@ -98,6 +99,14 @@ public class Dato {
 
     public void setConsumoGas(double consumoGas) {
         this.consumoGas = consumoGas;
+    }
+
+    public double getMenorTiempo() {
+        return menorTiempo;
+    }
+
+    public void setMenorTiempo(double menorTiempo) {
+        this.menorTiempo = menorTiempo;
     }
     
     
